@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "573000768652",
+    "firebase_url": "https://vscodeflutter-346d2-default-rtdb.firebaseio.com",
+    "project_id": "vscodeflutter-346d2",
+    "storage_bucket": "vscodeflutter-346d2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:573000768652:android:4923f1eb60b0982404efa9",
+        "android_client_info": {
+          "package_name": "com.example.eccatapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "573000768652-1un9d1pndc6trcvn7dn2unn5gdjpl3sd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.eccatapp",
+            "certificate_hash": "f9991d6c1d081f90467873b04261583f7c173e5a"
+          }
+        },
+        {
+          "client_id": "573000768652-7hf44lvhh8aeffiru8rplor5cb0pnj2n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDTaxY9jOFDcFrKaoYpsUqrPYosQgfZKl8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "573000768652-7hf44lvhh8aeffiru8rplor5cb0pnj2n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
