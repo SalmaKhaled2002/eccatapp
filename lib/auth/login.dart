@@ -101,7 +101,8 @@ Future signInWithGoogle() async {
             
                 Container(
                   padding: EdgeInsets.only(top:10,bottom:10),
-                  child: CustomTextForm(hinttext: "Enter your password",labelText: "Password",mycontroller: password,obscuretext:isPassword,validator: (val){
+                  child: CustomTextForm(hinttext: "Enter your password",labelText: "Password",mycontroller: password,
+                  obscuretext:isPassword,validator: (val){
                     if (val == ""){
                       return ("Can't to be empty!");
                     }
@@ -136,16 +137,11 @@ Future signInWithGoogle() async {
                       
                 final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
                   email: email.text,
-                  password: password.text
+                  password: password.text,
                 );
                 
                 
-                firestore.collection("user").add({
-                  'email':email.text,
-                  'password':password.text,
-                  
-
-                });
+                
                 loading=false;
                       setState(() {
                         

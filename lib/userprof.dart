@@ -8,19 +8,17 @@ import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 
-class Profile_pati extends StatefulWidget {
-  const Profile_pati({Key? key}) : super(key: key);
+class UserInfoPage extends StatefulWidget {
+  const UserInfoPage({Key? key}) : super(key: key);
 
   @override
   _UserInfoPageState createState() => _UserInfoPageState();
 }
 
-class _UserInfoPageState extends State<Profile_pati> {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+class _UserInfoPageState extends State<UserInfoPage> {
+    final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _dieaseController = TextEditingController();
-  final TextEditingController _medicineController = TextEditingController();
   final TextEditingController _newFieldKeyController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
   final TextEditingController _newFieldValueController =
@@ -28,15 +26,13 @@ class _UserInfoPageState extends State<Profile_pati> {
     final user = FirebaseAuth.instance.currentUser;
   File? _imageFile;
   final picker = ImagePicker();
-  // final FirebaseStorage _storage = FirebaseStorage.instance;
   String? urlPhoto;
+  final FirebaseStorage _storage = FirebaseStorage.instance;
 
   bool _isLoading = false;
-  String? patientname;
-  int? age;
-  String?diease;
-  String?Medicine;
-  // String? userImageURL;
+  String? name;
+  String? email;
+  int?phone;
 
   @override
   void initState() {
@@ -48,31 +44,41 @@ class _UserInfoPageState extends State<Profile_pati> {
     
   }
 
+  Future uploadImageURL()async{
+     
+      final ref =await FirebaseStorage.instance.ref().child('usersImages').child('$user_name' + '.jpg');
+      await ref.putFile(_imageFile!);
+      urlPhoto =await ref.getDownloadURL();
+
+      //  await FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser!.uid).set({
+      //   'username':urlPhoto,
+      //   });
+
+      
+    }
+
 getUserData() async{
 final user = FirebaseAuth.instance.currentUser; 
 final uid = user!.uid   ;
    final DocumentSnapshot docUser = await FirebaseFirestore.instance.collection('users').doc(uid).get();
     setState(() {
-      patientname = docUser.get('username_patient');
-    age = docUser.get('age');
-    diease = docUser.get('Dieases');
-    Medicine=docUser.get('Medicine');
-     _nameController.text =patientname! ;
-      _phoneNumberController.text =age!.toString() ;
-        _dieaseController.text =diease! ;
-         _medicineController.text =Medicine! ;
-       
+      name = docUser.get('username');
+    email = docUser.get('email');
+    phone = docUser.get('phone');
+     _nameController.text =name! ;
+        _emailController.text =email! ;
+        _phoneNumberController.text ='0$phone' ;
     });
   }
   
   @override
   Widget build(BuildContext context) {
     return 
-    Scaffold(
     
+    Scaffold(
       
       
-    body:  Container(
+      body:Container(
          decoration: const BoxDecoration(
         gradient: LinearGradient(
           begin:Alignment.bottomLeft,
@@ -99,7 +105,7 @@ final uid = user!.uid   ;
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(padding: EdgeInsets.only(top:25,left: 15,right: 15,bottom: 20)),
-                  Text("         Patient Profile",style: TextStyle(fontSize: 29,fontWeight:FontWeight.bold ),),
+                  Text("            User Profile",style: TextStyle(fontSize: 29,fontWeight:FontWeight.bold ),),
                   Center(
                     child: CircleAvatar(
                       radius: 60,
@@ -122,9 +128,9 @@ final uid = user!.uid   ;
                       style: ElevatedButton.styleFrom(
                         primary: Colors.blue,
                       ),
-                      onPressed:(){},
+                      onPressed:(){ _isLoading ? null : _uploadImage();},
                       
-                      //  _isLoading ? null : _uploadImage,
+                     
                       child: _isLoading
                           ? const CircularProgressIndicator()
                           : const Text('Update Profile Picture',style: TextStyle(fontSize: 16,color: Colors.white),),
@@ -144,14 +150,14 @@ final uid = user!.uid   ;
                   ),
               
                   Text(
-                    'Patient_name:',
+                    'Name:',
                   style: TextStyle(fontSize: 22,fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 8),
                   TextFormField(
                     controller: _nameController,
                     decoration: const InputDecoration(
-                      hintText: 'Enter patient name,hintStyle: TextStyle(fontWeight: FontWeight.w500',
+                      hintText: 'Enter your name,hintStyle: TextStyle(fontWeight: FontWeight.w500',
                      border: OutlineInputBorder(),
                       focusedBorder: OutlineInputBorder(
                          borderRadius: BorderRadius.all(Radius.circular(30)),
@@ -167,7 +173,32 @@ final uid = user!.uid   ;
                       
                     ),
                   ),
-                    const SizedBox(height: 16),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Email:',
+                      style: TextStyle(fontSize: 22,fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 8),
+                  TextFormField(
+                    controller: _emailController,
+                    decoration: const InputDecoration(
+                      hintText: 'Enter your email,hintStyle: TextStyle(fontWeight: FontWeight.w500',
+                     border: OutlineInputBorder(),
+                      focusedBorder: OutlineInputBorder(
+                         borderRadius: BorderRadius.all(Radius.circular(30)),
+                         borderSide: BorderSide(color: Colors.green,width: 2)
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.green,width: 2)
+                      ),
+                      disabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.blue,width: 2)
+                      ),
+                        
+                      
+                    ),
+                  ),
+                  const SizedBox(height: 16),
                   Text(
                     'Phone Number:',
                      style: TextStyle(fontSize: 22,fontWeight: FontWeight.bold),
@@ -177,56 +208,6 @@ final uid = user!.uid   ;
                     controller: _phoneNumberController,
                     decoration: const InputDecoration(
                       hintText: 'Enter your phone number,hintStyle: TextStyle(fontWeight: FontWeight.w500',
-                      border: OutlineInputBorder(),
-                      focusedBorder: OutlineInputBorder(
-                         borderRadius: BorderRadius.all(Radius.circular(30)),
-                         borderSide: BorderSide(color: Colors.green,width: 2)
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.green,width: 2)
-                      ),
-                      disabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.blue,width: 2)
-                      ),
-                        
-                      
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    'Diease:',
-                      style: TextStyle(fontSize: 22,fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 8),
-                  TextFormField(
-                    controller: _dieaseController,
-                    decoration: const InputDecoration(
-                      hintText: 'Enter his_diease,hintStyle: TextStyle(fontWeight: FontWeight.w500',
-                      border: OutlineInputBorder(),
-                      focusedBorder: OutlineInputBorder(
-                         borderRadius: BorderRadius.all(Radius.circular(30)),
-                         borderSide: BorderSide(color: Colors.green,width: 2)
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.green,width: 2)
-                      ),
-                      disabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.blue,width: 2)
-                      ),
-                        
-                      
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    'Medicine:',
-                      style: TextStyle(fontSize: 22,fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 8),
-                  TextFormField(
-                    controller: _medicineController,
-                    decoration: const InputDecoration(
-                      hintText: 'Enter his_medicine,hintStyle: TextStyle(fontWeight: FontWeight.w500',
                      border: OutlineInputBorder(),
                       focusedBorder: OutlineInputBorder(
                          borderRadius: BorderRadius.all(Radius.circular(30)),
@@ -242,7 +223,6 @@ final uid = user!.uid   ;
                       
                     ),
                   ),
-                
           
                   const SizedBox(height: 16),
           
@@ -282,7 +262,7 @@ final uid = user!.uid   ;
                     controller: _newFieldKeyController,
                     decoration: const InputDecoration(
                       hintText: 'Enter new field',hintStyle: TextStyle(fontWeight: FontWeight.w500),
-                    border: OutlineInputBorder(),
+                     border: OutlineInputBorder(),
                       focusedBorder: OutlineInputBorder(
                          borderRadius: BorderRadius.all(Radius.circular(30)),
                          borderSide: BorderSide(color: Colors.green,width: 2)
@@ -302,7 +282,7 @@ final uid = user!.uid   ;
                     controller: _newFieldValueController,
                     decoration: const InputDecoration(
                       hintText: 'Enter new value of this field ',hintStyle: TextStyle(fontWeight: FontWeight.w500),
-                       border: OutlineInputBorder(),
+                      border: OutlineInputBorder(),
                       focusedBorder: OutlineInputBorder(
                          borderRadius: BorderRadius.all(Radius.circular(30)),
                          borderSide: BorderSide(color: Colors.green,width: 2)
@@ -337,7 +317,7 @@ final uid = user!.uid   ;
           ),
         ),
       ),
-      );
+    );
   }
 
   Future<void> _getImage() async {
@@ -349,11 +329,7 @@ final uid = user!.uid   ;
     }
   }
 
-  // void uploadImage ( )async
-  // {
-  //  await user!.updatePhotoURL('photoURL');
-
-  // } 
+ 
 
   void _changePassword() async {
     setState(() {
@@ -378,38 +354,41 @@ final uid = user!.uid   ;
     });
   }
 
-  // Future<void> _uploadImage() async {
-  //   setState(() {
-  //     _isLoading = true;
-  //   });
+  Future<void> _uploadImage() async {
+    setState(() {
+      _isLoading = true;
+    });
 
-  //   try {
-  //     final ref = _storage.ref().child('users/${_user.uid}/profile.png');
+    try {
+      final ref =await _storage.ref().child('usersImages').child('users/${user!.uid}/profile.png');
 
-  //     await ref.putFile(_imageFile!);
+     UploadTask uploadTask =  ref.putFile(_imageFile!);
 
-  //     final url = await ref.getDownloadURL();
+      // final url = await ref.getDownloadURL();
+      TaskSnapshot  snapshot = await uploadTask.whenComplete(() => null);
 
-  //     await _user.updatePhotoURL(url);
+    final url = await snapshot.ref.getDownloadURL();
 
-  //     await _firestore.collection('users').doc(_user.uid).update({
-  //       'photoUrl': url,
-  //     });
+      await user!.updatePhotoURL(url);
 
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       const SnackBar(content: Text('Profile picture updated successfully')),
-  //     );
-  //   } catch (e) {
-  //     print(e);
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(content: Text('Error updating profile picture: $e')),
-  //     );
-  //   } finally {
-  //     setState(() {
-  //       _isLoading = false;
-  //     });
-  //   }
-  // }
+      await _firestore.collection('users').doc(user!.uid).update({
+        'photoUrl': url,
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Profile picture updated successfully')),
+      );
+    } catch (e) {
+      print(e);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error updating profile picture: $e')),
+      );
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
 
   // void _removeImage() async {
   //   setState(() {

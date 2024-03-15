@@ -1,34 +1,21 @@
 
 //import 'package:eccatapp/auth/signup.dart';
 //import 'package:firebase_database/firebase_database.dart';
-import 'package:eccatapp/myprofile.dart';
+//import 'package:eccatapp/myprofile.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 
 
-void main() {
-  runApp( Voice());
-}
 class Voice extends StatefulWidget {
 
 
   @override
   State<Voice> createState() => _MyHome_State();
 }
-final DatabaseReference =FirebaseDatabase.instance.ref("Store Voice");
+final DatabaseReference =FirebaseDatabase.instance.ref("StoreVoice");
 class _MyHome_State extends State<Voice> {
-  /*_MyHomePageState() {
-  /// Init Alan Button with project key from Alan AI Studio      
-  AlanVoice.addButton("1b1a53c4681ac42d1e413ae149313ccc2e956eca572e1d8b807a3e2338fdd0dc/stage");
-  buttonAlign:AlanVoice.BUTTON_ALIGN_LEFT;
-
-  /// Handle commands from Alan AI Studio
-  AlanVoice.onCommand.add((command) {
-    debugPrint("got new command ${command.toString()}");
-
-  });
-}*/
+  
   final SpeechToText _speechToText= SpeechToText();
   
 
@@ -36,6 +23,7 @@ class _MyHome_State extends State<Voice> {
    String _wordSpoken="";
    double _confidenceLevel=0;
   late String Construction= _wordSpoken;
+  
    
   @override
   void initState() {
@@ -64,9 +52,9 @@ class _MyHome_State extends State<Voice> {
     setState(() {
        _wordSpoken="${result.recognizedWords}";
        _confidenceLevel=result.confidence; 
-      databaseReference.child(DateTime.now().microsecond.toString()).set({
-           'Construcion':_wordSpoken.toString(),
-       });
+     DatabaseReference.child(DateTime.now().microsecond.toString()).set({
+         'Construcion':_wordSpoken.toString(),
+      });
     });
   }
    @override

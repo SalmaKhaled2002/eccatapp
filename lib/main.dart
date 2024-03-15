@@ -2,10 +2,9 @@
 import 'dart:io';
 
 import 'package:eccatapp/aboutapp.dart';
-import 'package:eccatapp/auth/loginnn.dart';
-import 'package:eccatapp/auth/ssignup.dart';
 
 import 'package:eccatapp/camera.dart';
+import 'package:eccatapp/components/userprofile.dart';
 
 import 'package:eccatapp/contactus.dart';
 
@@ -14,7 +13,7 @@ import 'package:eccatapp/info.dart';
 
 import 'package:eccatapp/location.dart';
 import 'package:eccatapp/map.dart';
-import 'package:eccatapp/myprofile.dart';
+
 import 'package:eccatapp/patientinfo.dart';
 import 'package:eccatapp/forgetpassword.dart';
 import 'package:eccatapp/auth/login.dart';
@@ -23,7 +22,8 @@ import 'package:eccatapp/onboarding.dart';
 import 'package:eccatapp/resetpassword.dart';
 import 'package:eccatapp/auth/signup.dart';
 
-import 'package:eccatapp/test.dart';
+import 'package:eccatapp/home_page.dart';
+import 'package:eccatapp/signintest.dart';
 import 'package:eccatapp/voice.dart';
 import 'package:eccatapp/welcomepage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -41,7 +41,8 @@ void main()async {
       apiKey:'AIzaSyDTaxY9jOFDcFrKaoYpsUqrPYosQgfZKl8' ,
        appId: '1:573000768652:android:4923f1eb60b0982404efa9', 
        messagingSenderId: '573000768652',
-        projectId: 'vscodeflutter-346d2')
+        projectId: 'vscodeflutter-346d2', 
+        storageBucket: "eccatapp.appspot.com",)
   )
   :await Firebase.initializeApp();
   
@@ -68,11 +69,9 @@ class _MyHomePageState extends State<MyApp> {
     } else {
       print('User is signed in!');
     }
-    print('ok');
   });
     super.initState();
 
-    //done
 
 
 
@@ -87,8 +86,8 @@ class _MyHomePageState extends State<MyApp> {
      
       debugShowCheckedModeBanner: false,
       home: 
-      FirebaseAuth.instance.currentUser == null ? Signup() :
-      Test(),
+       FirebaseAuth.instance.currentUser == null ? Signup() :
+       Test(),
       routes: {
         
         "welcomepage" :(context) => Welcomepage(),
@@ -97,7 +96,7 @@ class _MyHomePageState extends State<MyApp> {
         "forgetpassword":(context) => ForgetPassword(),
         "resetpassword":(context) => ResetPassword(),
         "contactus":(context) =>Contact_us(),
-         "ssignup":(context) => Ssignup(),
+         
         "map" :(context) => Map(),
         "location" :(context) =>Location(),
         "voice":(context) =>Voice(),
@@ -106,8 +105,8 @@ class _MyHomePageState extends State<MyApp> {
         "camera" :(context) => Camera(),
         "aboutapp":(context)=>About_App(),
         "info":(context) => Info(),
-        "loginnn":(context) => Loginnn(),
         
+        "userprofile" :(context) => UserInfoPage(),
         
        
         },

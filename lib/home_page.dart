@@ -1,45 +1,101 @@
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:eccatapp/patientinfo.dart';
+import 'package:eccatapp/voice.dart';
 
-
-import 'dart:typed_data';
-
-import 'package:eccatapp/photo.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-
+import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
-void main() {
-  runApp( Test());
-}
+
+import 'package:eccatapp/userprof.dart';
+
+
 class Test extends StatefulWidget {
- 
 
   @override
   State<Test> createState() => _MyHome();
 }
-final databaseReference = FirebaseDatabase.instance.ref("StoreData");
 
 class _MyHome extends State<Test> {
 
-  Uint8List ?_image;
-  void selectedImage()async{
-    Uint8List img = await pickImage(ImageSource.gallery);
-    setState(() {
-      _image=img;
-    });
-  }
+
+
+  final user = FirebaseAuth.instance;
+  
     String _web='';
   final websitrUri =Uri.parse("https://www.elwatannews.com/news/details/6742789#goog_rewarded");
   
   int selectedindex=0;
   bool isLoading = true;
+
+  String? name;
+  String? email;
+
+@override
+void initState()
+{
+  super.initState();
+  setState(() {
+    
+  });
+  getUserData();
+}
+
+  getUserData() async{
+final user = FirebaseAuth.instance.currentUser; 
+final uid = user!.uid   ;
+   final DocumentSnapshot docUser = await FirebaseFirestore.instance.collection('users').doc(uid).get();
+    setState(() {
+      name = docUser.get('username');
+    email = docUser.get('email');
+    });
+  }
+  int _intpage=0;
+
+//GlobalKey <CurvedNavigationBarState> _curvednavihationkey =GlobalKey();
+List <Widget> screens=[
+  Test(),
+  Profile_pati(),
+  Voice(),
+];
+  
   @override
   Widget build(BuildContext context) {
+
+    final screenWidth = MediaQuery.of(context).size.width;
+    double containerWidth = 288.0;
+
+    if (screenWidth > 480) {
+      containerWidth = screenWidth / 2;
+    }
+
     return Scaffold(
-         bottomNavigationBar: BottomNavigationBar(
+     
+    /*  bottomNavigationBar: CurvedNavigationBar(
+        color:Color(0xFF674AEF), 
+        animationDuration: Duration(milliseconds: 300),
+        key:_curvednavihationkey,
+        index: 0,
+        height: 65.0,
+        items: 
+      [
+        Icon(Icons.home),
+        Icon(Icons.person),
+        Icon(Icons.settings),
+      ],
+      animationCurve: Curves.easeInOut,
+      onTap: (index){
+      setState(() {
+        _intpage=index;
+      });
+      },
+      letIndexChange: (index)=>true,
+      ),*/
+      
+      
+        bottomNavigationBar: BottomNavigationBar(
       onTap: (val){
         setState(() {
           selectedindex=val;
@@ -48,104 +104,125 @@ class _MyHome extends State<Test> {
       currentIndex: selectedindex,
       iconSize: 24,
       showUnselectedLabels: true,
-      selectedItemColor: Color(0xFF674AEF),
-      selectedFontSize: 20,
-      unselectedFontSize: 14,
+      selectedItemColor: Colors.black ,
+      selectedFontSize: 23,
+      unselectedFontSize: 18,
       unselectedItemColor: Colors.grey,
       selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
-     
+      
+     type: BottomNavigationBarType.fixed,
       items: [
       BottomNavigationBarItem(icon: Icon(Icons.home),label: 'Home'),
-       BottomNavigationBarItem(icon: Icon(Icons.settings),label: 'Settings'),
       BottomNavigationBarItem(icon: Icon(Icons.person),label: 'Patient_info'),
+       BottomNavigationBarItem(icon: Icon(Icons.settings),label: 'Settings'),
+      
 
-    ]),
+    ],
+    
+    
+    
+    ),
     
      
     
     drawer:Drawer(
       backgroundColor:Colors.white,
-      child: Container(
-        padding: EdgeInsets.only(top:18,right:15,left:15 ),
-        child:ListView(children: [
-          Row(
+      child: 
+      Container(
+        padding: EdgeInsets.only(top:20,left: 15),
+          width: screenWidth > 480 ? containerWidth : 288,
+        height: double.infinity,
+        color: Colors.white,
+        child: SafeArea(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-             Stack(
-          children: [
-            _image !=null ? CircleAvatar(
-              radius: 64,
-              backgroundImage: MemoryImage(_image!),
-            ):
-            CircleAvatar(
-              radius: 64,
-              backgroundImage: AssetImage('images/photo.jpg'),
-            ),
-            Positioned(child: IconButton(onPressed: (){
-              selectedImage();
-            }, icon: const Icon(Icons.add_a_photo),
-            
-            ),
-            bottom: -10,
-            left: 80,
-            ),
-            ]),
-          /* FirebaseAnimatedList 
-      (
-        query :databaseReference ,
-        itemBuilder :(context ,snapshot ,animation ,index){
-        return ListTile(
-          title: Text(snapshot.child('username').value .toString()),
-          subtitle: Text(snapshot.child('email').value .toString()), 
-        );
-      })*/
-          ],
-        
-       // child:ClipRRect(borderRadius: BorderRadius.circular(60),
-        //child: Image.asset("images/icon.jpg",fit: BoxFit.cover,)),
+              StreamBuilder(
+                stream: FirebaseFirestore.instance
+                    .collection('users')
+                    .where('uid' , isEqualTo: user.currentUser!.uid )
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return const CircularProgressIndicator();
+                  }
+                  
+                  
+                  return Row(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                           Navigator.push(
+                             context,
+                             MaterialPageRoute(
+                               builder: (context) => const UserInfoPage(),
+                             ),
+                           );
+                        },
+                        child: StreamBuilder<DocumentSnapshot>(
+                          stream: FirebaseFirestore.instance
+                              .collection('users')
+                              .doc(user.currentUser!.uid)
+                              .snapshots(),
+                          builder: (context, snapshot) {
+                            if (!snapshot.hasData) {
+                              return const CircleAvatar(
+                                radius: 40,
+                                backgroundColor: Colors.grey,
+                                child: Icon(
+                                  Icons.person,
+                                  color:  const Color(0xFF17203A),
+                                  size: 40,
+                                ),
+                              );
+                            }
+                            
+                           
+                            return CircleAvatar(
+                              radius: 40,
+                           
+                              backgroundColor: Colors.grey,
+                              child:
+                             
+                                  Icon(
+                                      Icons.person,
+                                      color:  Color.fromARGB(255, 33, 39, 59),
+                                      size: 40,
+                                    ),
+                            );
+                            
+                          },
+                          
+                        ),
+                        
+                      ),
+                      
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      Container(
+                        width: 150,
+                        child: Column(
+                          
+                          children: [
+                          
+                             Text(name!,style: TextStyle(fontSize:24,fontWeight: FontWeight.bold,color: Color(0xFF674AEF),
+                                                       ),overflow: TextOverflow.ellipsis),
+                            
+                              
+                                Text(email!,style: TextStyle(fontSize:15,fontWeight: FontWeight.w600,color: Color(0xFF674AEF),
+                                                             ),overflow: TextOverflow.ellipsis),
+                               
+                          ],
+                        ),
+                      ),
+                     
+                    ],
+                  );
+                },
+              ),
       
-      /*Expanded(child:  FirebaseAnimatedList 
-      (
-        query :databaseReference ,
-        itemBuilder :(context ,snapshot ,animation ,index){
-        return ListTile(
-          title: Text(snapshot.child('username').value .toString()),
-          subtitle: Text(snapshot.child('email').value .toString()), 
-        );
-      })
-      )*/
-
-      
-      /*StreamBuilder(
-        stream: FirebaseFirestore.instance.collection("Users").snapshots(),
-         builder:(context, snapshot ){
-          if(snapshot.hasError){
-            print(context);
-          }
-          if(snapshot.connectionState ==ConnectionState.waiting){
-            return const Center(child :CircularProgressIndicator());
-          }
-          if (snapshot.data ==null){
-            return const Text("No Data");
-          }
-          final users =snapshot.data!.docs;
-          return ListView.builder(
-            itemCount: users.length,
-            itemBuilder:(context,index){
-              final user =users[index];
-              return ListTile(
-                title: user['username'],
-                subtitle: user['email'],
-              );
-            },
-             );
-
-          },
-      )*/
-            
-          ),
-
-         
-            
+     
         
            ListTile(
               title: Text("Homepage",style: TextStyle(fontSize: 22,fontWeight: FontWeight.w500),),
@@ -157,7 +234,7 @@ class _MyHome extends State<Test> {
             title: Text("Patient_account",style: TextStyle(fontSize: 22,fontWeight: FontWeight.w500),),
             leading: Icon(Icons.account_balance_rounded,size: 35,),
             onTap: (){
-             Navigator.of(context).pushNamed("info");
+             Navigator.of(context).pushNamed("patientinfo");
             },
           ),
            ListTile(
@@ -205,21 +282,20 @@ class _MyHome extends State<Test> {
                        ),
           
           
-            
           
-        ])),
+          
+        ]
+        )
+        ),
+        
+      ),
+
+
+
+      
+
     ),
-
-
-
-      floatingActionButton: FloatingActionButton(onPressed: (){
-          showSearch(context: context, delegate: CustomSearch());
-           bool isLoading = true;
-           setState(() {
-             
-           });
-        }),
-      body: 
+         body:
       //isLoading == true ? Center (child:Text("Loading.....")):
       ListView(
         
@@ -243,13 +319,18 @@ class _MyHome extends State<Test> {
                     Builder(builder: (context)=>IconButton(onPressed: (){
         Scaffold.of(context).openDrawer();
       }, icon: Icon(Icons.dashboard,size: 30,color: Colors.white,))),
+
+
                    
                        Icon(
                         Icons.notifications,
                         size: 30,
                         color: Colors.white,
+
                       ),
-                    
+
+
+         
                   ],
                 ),
                 SizedBox(height: 20,),
@@ -276,25 +357,35 @@ class _MyHome extends State<Test> {
                   decoration: BoxDecoration(color: Colors.white,borderRadius: BorderRadius.circular(40)),
                   
                   
-                 child: TextFormField(
-                    decoration: InputDecoration(
-                      
-                      border: InputBorder.none,
-                      hintText: "Search here...",
-                      hintStyle: TextStyle(
-                        color: Colors.blue.withOpacity(0.5),
-                      ),
-                      
-                      prefixIcon: Icon(
-                        Icons.search,
-                        size: 25,
+               
+                 
+                  
+                   child: TextFormField(
+                    readOnly: true,
+                    onTap: () {
+                                showSearch(context: context, delegate: CustomSearch());
+
+                    },
+                      decoration: InputDecoration(
+                        
+                        border: InputBorder.none,
+                        hintText: "Search here...",
+                        hintStyle: TextStyle(
+                          color: Colors.blue.withOpacity(0.5),
+                        ),
+                        
+                        prefixIcon: Icon(
+                          Icons.search,
+                          size: 25,
+                        ),
                       ),
                     ),
-                  ),
+   
                 ),
               ],
             ),
           ),
+          
           Padding(padding: EdgeInsets.only(top: 20,left:15,right:15),
           child:Column(
             children: [
@@ -496,13 +587,15 @@ class _MyHome extends State<Test> {
                 
   }
 }
+
+
 class CustomSearch extends SearchDelegate{
   List username=[
      "Battery",
      "Healt_hcare",
      "Iot",
-     "Patient_info",
-     "User_info",
+     "Patient_profile",
+     "User_profile",
      "Map",
      "Location",
      "Voice",
@@ -528,35 +621,47 @@ class CustomSearch extends SearchDelegate{
 
   @override
   Widget buildResults(BuildContext context) {
-    return Text("Result $query");
+    // return Text("Result $query");
+    List<String> matchQuey = [];
+    for (var screen in username){if (screen.toLowerCase().contains(query.toLowerCase())){matchQuey.add(screen);}}
+    return ListView.builder(itemBuilder:(context, index) {
+      var result = matchQuey[index];
+      return ListTile(onTap: (){_navigateToScreen(context, result);},title: Text(result),);
+    }, itemCount: matchQuey.length,);
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    if(query ==""){
-      return ListView.builder(
-      itemCount: username.length,
-      itemBuilder: (context,i){
-      return InkWell(
-            onTap: (){
-              showResults(context);
-            },
-            
-            child: Card(child:Padding(padding: EdgeInsets.all(18.0),child: Text("${username[i]}",style: TextStyle(fontSize:18 ),),)));
-    });
-  }
-  else{
-    filterList =username.where((element) => element.contains(query)).toList();
-    return ListView.builder(
-      itemCount: username.length,
-      itemBuilder: (context,i){
-      return InkWell(
-            onTap: (){
-              showResults(context);
-            },
-            
-            child: Card(child:Padding(padding:EdgeInsets.all(18.0),child: Text("${filterList![i]}",style: TextStyle(fontSize:18 ),),)));
-    });
-  }
+
+List<String> matchQuey = [];
+    for (var screen in username){if (screen.toLowerCase().contains(query.toLowerCase())){matchQuey.add(screen);}}
+    return ListView.builder(itemBuilder:(context, index) {
+      var result = matchQuey[index];
+      return ListTile(onTap: (){_navigateToScreen(context, result);},title: Text(result),);
+    }, itemCount: matchQuey.length,);
+
+
+ 
   } 
+
+  void _navigateToScreen(BuildContext context, String screenName) {
+  switch (screenName) {
+    case "Map":
+       Navigator.of(context).pushNamed("map");
+      
+      break;
+    case "Location":
+       Navigator.of(context).pushNamed("location");
+      break;
+       case "Voice":
+      Navigator.of(context).pushNamed("voice");
+      break;
+    default:
+      break;
+  }
+}
+    
     }
+
+
+

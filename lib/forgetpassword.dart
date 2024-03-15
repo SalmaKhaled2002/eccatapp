@@ -22,18 +22,24 @@ bool loading=true;
   @override
   Widget build(BuildContext context) {
     return  Container(
-      decoration: const BoxDecoration(
+       decoration: const BoxDecoration(
         gradient: LinearGradient(
-          begin:Alignment.topRight,
-          end: Alignment.bottomLeft,
+          begin:Alignment.bottomLeft,
+          end: Alignment.topRight,
+          stops: [
+            0.1,
+            0.4,
+            1,
+          ],
           colors: [
-            Colors.blue,
-            Colors.red,
+            Color.fromARGB(255, 107, 105, 105),
+            Color.fromARGB(255, 214, 214, 235),
+            Color.fromARGB(255, 223, 193, 203),
           ]
         )
       ),
       child: Scaffold(
-        backgroundColor:Colors.transparent,  
+        backgroundColor:Colors.transparent, 
     body: loading?Center(child: CircularProgressIndicator(),): Container(
       child:ListView(
         children:[
