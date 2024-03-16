@@ -355,7 +355,7 @@ class _MyHome extends State<Signup> {
                                     .child(user_name.text + '.jpg');
 
                                 await ref.putFile(_imageFile!);
-                                urlPhoto = ref.getDownloadURL();
+                                urlPhoto = ref.getDownloadURL() as String;
 
 
                                 addUserDetails(
