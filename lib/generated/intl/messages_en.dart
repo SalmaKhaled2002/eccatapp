@@ -21,5 +21,29 @@ class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'en';
 
   final messages = _notInlinedMessages(_notInlinedMessages);
-  static Map<String, Function> _notInlinedMessages(_) => <String, Function>{};
+  static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "Signout": MessageLookupByLibrary.simpleMessage("Sign Out"),
+        "tChangeLanguage":
+            MessageLookupByLibrary.simpleMessage("Change Language"),
+        "tPatient_profile":
+            MessageLookupByLibrary.simpleMessage("Patient_profile"),
+        "tSettings": MessageLookupByLibrary.simpleMessage("Settings"),
+        "taboutapp": MessageLookupByLibrary.simpleMessage("About App"),
+        "tabouteccat": MessageLookupByLibrary.simpleMessage("About ECCAT"),
+        "tcontactus": MessageLookupByLibrary.simpleMessage("Contact Us"),
+        "tdarkmode": MessageLookupByLibrary.simpleMessage("Dark Mode"),
+        "tdone": MessageLookupByLibrary.simpleMessage("Done"),
+        "tedit": MessageLookupByLibrary.simpleMessage("Edit"),
+        "temail": MessageLookupByLibrary.simpleMessage("Email"),
+        "tgender": MessageLookupByLibrary.simpleMessage("Gender"),
+        "thelp": MessageLookupByLibrary.simpleMessage("Help"),
+        "thomepage": MessageLookupByLibrary.simpleMessage("Home Page"),
+        "tname": MessageLookupByLibrary.simpleMessage("Name"),
+        "tohidear": MessageLookupByLibrary.simpleMessage("Hi ,Dear"),
+        "tolocation": MessageLookupByLibrary.simpleMessage("Location"),
+        "tomap": MessageLookupByLibrary.simpleMessage("Map"),
+        "tphonenum": MessageLookupByLibrary.simpleMessage("Phone Number"),
+        "trole": MessageLookupByLibrary.simpleMessage("Role"),
+        "tvoice": MessageLookupByLibrary.simpleMessage("Voice")
+      };
 }

@@ -11,9 +11,11 @@ class CustomTextForm extends StatelessWidget{
   final Widget? icon;
   final Widget? suffixIcon;
   final Widget? prefixIcon;
+  final TextInputType? keyboardType;
+  final bool? readOnly;
 
-  const CustomTextForm( {super.key, required this.hinttext,
-   required this.mycontroller,required this.obscuretext,required this.validator, this.icon, 
+  const CustomTextForm( {super.key, required this.hinttext,this.keyboardType,this.readOnly,
+   required this.mycontroller,required this.obscuretext, this.validator, this.icon,
    this.suffixIcon, this.prefixIcon,  required this.labelText   }) ;
    
   
@@ -23,6 +25,8 @@ class CustomTextForm extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      readOnly: readOnly ?? false,
+      keyboardType: keyboardType,
       validator:validator,
               controller: mycontroller,
               obscureText: obscuretext,

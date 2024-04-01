@@ -1,1 +1,23 @@
-{}
+{
+"tSettings":"Settings",
+"tvoice":"Voice",
+"tcontactus":"Contact Us",
+"thelp":"Help",
+"taboutapp":"About App",
+"tabouteccat" :"About ECCAT",
+"tohidear":"Hi ,Dear",
+"thomepage" :"Home Page",
+"tomap" :"Map",
+"tolocation":"Location",
+"tname":"Name",
+"temail":"Email",
+"tgender":"Gender",
+"tedit":"Edit",
+"tdone":"Done",
+"tphonenum":"Phone Number",
+"trole":"Role",
+"tChangeLanguage":"Change Language",
+"tdarkmode":"Dark Mode",
+"Signout":"Sign Out",
+"tPatient_profile":"Patient_profile"
+}

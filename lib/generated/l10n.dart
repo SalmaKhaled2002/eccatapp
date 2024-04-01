@@ -49,6 +49,216 @@ class S {
   static S? maybeOf(BuildContext context) {
     return Localizations.of<S>(context, S);
   }
+
+  /// `Settings`
+  String get tSettings {
+    return Intl.message(
+      'Settings',
+      name: 'tSettings',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Voice`
+  String get tvoice {
+    return Intl.message(
+      'Voice',
+      name: 'tvoice',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Contact Us`
+  String get tcontactus {
+    return Intl.message(
+      'Contact Us',
+      name: 'tcontactus',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Help`
+  String get thelp {
+    return Intl.message(
+      'Help',
+      name: 'thelp',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `About App`
+  String get taboutapp {
+    return Intl.message(
+      'About App',
+      name: 'taboutapp',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `About ECCAT`
+  String get tabouteccat {
+    return Intl.message(
+      'About ECCAT',
+      name: 'tabouteccat',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Hi ,Dear`
+  String get tohidear {
+    return Intl.message(
+      'Hi ,Dear',
+      name: 'tohidear',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Home Page`
+  String get thomepage {
+    return Intl.message(
+      'Home Page',
+      name: 'thomepage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Map`
+  String get tomap {
+    return Intl.message(
+      'Map',
+      name: 'tomap',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Location`
+  String get tolocation {
+    return Intl.message(
+      'Location',
+      name: 'tolocation',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Name`
+  String get tname {
+    return Intl.message(
+      'Name',
+      name: 'tname',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Email`
+  String get temail {
+    return Intl.message(
+      'Email',
+      name: 'temail',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Gender`
+  String get tgender {
+    return Intl.message(
+      'Gender',
+      name: 'tgender',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Edit`
+  String get tedit {
+    return Intl.message(
+      'Edit',
+      name: 'tedit',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Done`
+  String get tdone {
+    return Intl.message(
+      'Done',
+      name: 'tdone',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Phone Number`
+  String get tphonenum {
+    return Intl.message(
+      'Phone Number',
+      name: 'tphonenum',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Role`
+  String get trole {
+    return Intl.message(
+      'Role',
+      name: 'trole',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Change Language`
+  String get tChangeLanguage {
+    return Intl.message(
+      'Change Language',
+      name: 'tChangeLanguage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Dark Mode`
+  String get tdarkmode {
+    return Intl.message(
+      'Dark Mode',
+      name: 'tdarkmode',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sign Out`
+  String get Signout {
+    return Intl.message(
+      'Sign Out',
+      name: 'Signout',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Patient_profile`
+  String get tPatient_profile {
+    return Intl.message(
+      'Patient_profile',
+      name: 'tPatient_profile',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
@@ -57,6 +267,8 @@ class AppLocalizationDelegate extends LocalizationsDelegate<S> {
   List<Locale> get supportedLocales {
     return const <Locale>[
       Locale.fromSubtags(languageCode: 'en'),
+      Locale.fromSubtags(languageCode: 'ar'),
+      Locale.fromSubtags(languageCode: 'ch'),
     ];
   }
 
